@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ecotracks — Smart Energy Saver Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">⚡</div>
+        <div class="title">EcoTracks</div>
+      </div>
+      <nav class="nav">
+        <button class="nav-btn active">Dashboard</button>
+        <button class="nav-btn">Analytics</button>
+        <button class="nav-btn">Tips</button>
+        <button class="nav-btn">Settings</button>
+      </nav>
+      <div class="theme-row">
+        <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+      </div>
+      <div class="sidebar-footer">© 2025 EcoTracks</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="main-header">
+        <div>
+          <h1>⚡ EcoTracks</h1>
+          <p class="subtitle">Smart Energy Saver Dashboard</p>
+        </div>
+        <div class="header-right">
+          <div class="live-pill"><span class="dot"></span> Live</div>
+        </div>
+      </header>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="content-section">
+        <!-- METRICS -->
+        <div class="metrics">
+          <div class="card metric">
+            <div class="metric-top">
+              <div class="metric-icon">💡</div>
+              <div class="metric-label">Today's Total</div>
+            </div>
+            <div class="metric-value" id="totalConsumption">0.0</div>
+            <div class="metric-unit">kWh</div>
+          </div>
+
+          <div class="card metric">
+            <div class="metric-top">
+              <div class="metric-icon">🌱</div>
+              <div class="metric-label">Energy Saved</div>
+            </div>
+            <div class="metric-value" id="energySaved">0</div>
+            <div class="metric-unit">%</div>
+          </div>
+
+          <div class="card metric">
+            <div class="metric-top">
+              <div class="metric-icon">🔋</div>
+              <div class="metric-label">Efficiency Score</div>
+            </div>
+            <div class="metric-value" id="efficiencyScore">0</div>
+            <div class="metric-unit">/10</div>
+          </div>
+        </div>
+
+        <!-- VISUALS -->
+        <div class="grid">
+        <div class="panel big">
+          <div class="panel-header">
+            <h2>Real-Time Energy Usage</h2>
+            <div class="controls-small">Window: last 20 points</div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="liveChart"></canvas>
+          </div>
+
+          <div id="suggestions" class="suggestions">
+            <!-- three suggestion-items are created by app.js -->
+          </div>
+        </div>
+
+        <div class="panel side">
+          <div class="panel-header">
+            <h3>Device Controls (simulate)</h3>
+          </div>
+
+          <div class="devices">
+            <label class="device">
+              <input type="checkbox" data-device="AC" checked />
+              <div><strong>Air Conditioning</strong><span class="dev-desc">+1.2 kW</span></div>
+            </label>
+
+            <label class="device">
+              <input type="checkbox" data-device="Fridge" checked />
+              <div><strong>Refrigerator</strong><span class="dev-desc">+0.8 kW</span></div>
+            </label>
+
+            <label class="device">
+              <input type="checkbox" data-device="Lights" checked />
+              <div><strong>Lighting</strong><span class="dev-desc">+0.6 kW</span></div>
+            </label>
+
+            <label class="device">
+              <input type="checkbox" data-device="Washer" />
+              <div><strong>Washing Machine</strong><span class="dev-desc">+0.7 kW</span></div>
+            </label>
+
+            <label class="device">
+              <input type="checkbox" data-device="Electronics" checked />
+              <div><strong>Electronics</strong><span class="dev-desc">+0.4 kW</span></div>
+            </label>
+          </div>
+
+          <div class="panel-header" style="margin-top:16px">
+            <h3>Device Distribution</h3>
+          </div>
+          <div class="chart-wrap small">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
+
+        <div class="panel bottom">
+          <div class="panel-header">
+            <h3>Daily Consumption Pattern</h3>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <!-- Analytics Section -->
+      <section id="analytics" class="content-section">
+        <div class="panel big">
+          <div class="panel-header">
+            <h2>📊 Analytics Dashboard</h2>
+            <p>Detailed energy consumption analysis and trends</p>
+          </div>
+          <div class="analytics-content">
+            <div class="analytics-grid">
+              <div class="analytics-card">
+                <h3>Weekly Trends</h3>
+                <div class="chart-wrap small">
+                  <canvas id="weeklyChart"></canvas>
+                </div>
+              </div>
+              <div class="analytics-card">
+                <h3>Monthly Comparison</h3>
+                <div class="chart-wrap small">
+                  <canvas id="monthlyChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tips Section -->
+      <section id="tips" class="content-section">
+        <div class="panel big">
+          <div class="panel-header">
+            <h2>💡 Energy Saving Tips</h2>
+            <p>Smart recommendations to reduce your energy consumption</p>
+          </div>
+          <div class="tips-content">
+            <div class="tips-grid">
+              <div class="tip-card">
+                <div class="tip-icon">🌡️</div>
+                <h3>Temperature Control</h3>
+                <p>Set your thermostat 2-3°C higher in summer and lower in winter to save up to 10% on energy bills.</p>
+              </div>
+              <div class="tip-card">
+                <div class="tip-icon">💡</div>
+                <h3>LED Lighting</h3>
+                <p>Replace incandescent bulbs with LED lights to reduce lighting energy consumption by 75%.</p>
+              </div>
+              <div class="tip-card">
+                <div class="tip-icon">🔌</div>
+                <h3>Unplug Devices</h3>
+                <p>Unplug electronics when not in use to eliminate phantom energy consumption.</p>
+              </div>
+              <div class="tip-card">
+                <div class="tip-icon">🌱</div>
+                <h3>Smart Appliances</h3>
+                <p>Use energy-efficient appliances and enable power-saving modes on all devices.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings" class="content-section">
+        <div class="panel big">
+          <div class="panel-header">
+            <h2>⚙️ Settings & Preferences</h2>
+            <p>Customize your EcoPower experience</p>
+          </div>
+          <div class="settings-content">
+            <div class="settings-grid">
+              <div class="setting-group">
+                <h3>Display Preferences</h3>
+                <div class="setting-item">
+                  <label>Theme</label>
+                  <select id="themeSelect">
+                    <option value="dark">Dark Mode</option>
+                    <option value="light">Light Mode</option>
+                  </select>
+                </div>
+                <div class="setting-item">
+                  <label>Units</label>
+                  <select id="unitSelect">
+                    <option value="kwh">kWh</option>
+                    <option value="watts">Watts</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-group">
+                <h3>Notifications</h3>
+                <div class="setting-item">
+                  <label>
+                    <input type="checkbox" id="energyAlerts" checked>
+                    Energy Usage Alerts
+                  </label>
+                </div>
+                <div class="setting-item">
+                  <label>
+                    <input type="checkbox" id="savingTips" checked>
+                    Daily Saving Tips
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">by NEXUS</footer>
+    </main>
+  </div>
+
+  <!-- Profile Icon -->
+  <div id="profileIcon" class="profile-icon">
+    <div class="profile-avatar">👤</div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="profile-modal">
+    <div class="profile-modal-content">
+      <div class="profile-modal-header">
+        <h3>User Profile</h3>
+        <button id="closeModal" class="close-btn">&times;</button>
+      </div>
+      <div class="profile-modal-body">
+        <div class="profile-form-group">
+          <label for="userName">Name:</label>
+          <input type="text" id="userName" placeholder="Enter your name">
+        </div>
+        <div class="profile-form-group">
+          <label for="userPicture">Profile Picture:</label>
+          <div class="picture-input-container">
+            <input type="file" id="userPicture" accept="image/*" style="display: none;">
+            <button type="button" id="uploadBtn" class="upload-btn">📁 Choose from Gallery</button>
+            <span class="file-info" id="fileInfo">No file selected</span>
+          </div>
+          <div class="picture-url-container">
+            <input type="url" id="userPictureUrl" placeholder="Or enter image URL">
+          </div>
+        </div>
+        <div class="profile-form-group">
+          <label for="energyGoal">Energy Goal (kWh to save next week):</label>
+          <input type="number" id="energyGoal" placeholder="Enter target kWh" min="0" step="0.1">
+        </div>
+        <div class="profile-preview">
+          <h4>Preview:</h4>
+          <div class="preview-avatar" id="previewAvatar">👤</div>
+          <div class="preview-name" id="previewName">Your Name</div>
+          <div class="preview-goal" id="previewGoal">Goal: 0 kWh</div>
+        </div>
+      </div>
+      <div class="profile-modal-footer">
+        <button id="saveProfile" class="save-btn">Save Profile</button>
+        <button id="cancelProfile" class="cancel-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
